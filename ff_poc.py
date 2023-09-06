@@ -55,7 +55,7 @@ server = app.server
 
  
 app.layout = dbc.Container([html.H1("Fantasy Football POC"), html.P("Proof of concept to visualize player stats dynamically"),
-                    html.H2("Skill Players' Stats - Min 100 carries/40 catches"),
+                    html.H2("Skill Players' Stats"),
                     html.Div([
                         dcc.Dropdown(
                             dfr['Category'].unique(),
