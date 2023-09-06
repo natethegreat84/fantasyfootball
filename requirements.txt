@@ -1,4 +1,4 @@
-dash==2.6.0
+dash==2.10.0
 gunicorn
 nfl_data_py
 pandas
