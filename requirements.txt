@@ -4,4 +4,4 @@ nfl_data_py
 pandas
 plotly.express
 numpy
-dash_bootstra_components
+dash_bootstrap_components
