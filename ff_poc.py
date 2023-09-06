@@ -51,7 +51,7 @@ dfr = player_stats.melt(id_vars=['season', 'display_name', 'position', 'games'],
        'receiving_yards_after_catch', 'fantasy_points', 'fantasy_points_ppr'])
  
 app = Dash(__name__)
- 
+server = app.server
 
  
 app.layout = dbc.Container([html.H1("Fantasy Football POC"), html.P("Proof of concept to visualize player stats dynamically"),
