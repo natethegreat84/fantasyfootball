@@ -121,12 +121,11 @@ app.layout = dbc.Container([html.H1("Fantasy Football POC"), html.P("Proof of co
 
 
 @callback(
-    Output('crossfilter-indicator-scatter', 'figure', allow_duplicate=True),
+    Output('crossfilter-indicator-scatter', 'figure'),
     Input('crossfilter-xaxis-column', 'value'),
     Input('crossfilter-yaxis-column', 'value'),
     Input('crossfilter-zaxis-column', 'value'),
-    Input('crossfilter-year-slider', 'value'),
-    prevent_initial_call = True)
+    Input('crossfilter-year-slider', 'value'))
 def update_graph(xaxis_column_name, yaxis_column_name,zaxis_column_name,
                  year_value):
     
@@ -258,38 +257,6 @@ def update_z_timeseries(hoverData, zaxis_column_name):
     dff = dff[dff['Category'] == zaxis_column_name]
     return create_time_series(dff, zaxis_column_name)
 
-@callback(
-    Output('crossfilter-indicator-scatter', 'figure'),
-    Input('crossfilter-xaxis-column', 'value'),
-    Input('crossfilter-yaxis-column', 'value'),
-    Input('crossfilter-zaxis-column', 'value'),
-    Input('crossfilter-year-slider', 'value'),
-    Input('select-player-list', 'value'))
-def update_graph_from_dropdown(xaxis_column_name, yaxis_column_name,zaxis_column_name,
-                 year_value, hoverData):
-    
-    dff = dfr[dfr['season'] == year_value] 
-
-    dff['hover'] = np.where(dff['display_name']==hoverData,"yes","no")
- 
-    fig = px.scatter_3d(x=dff[dff['Category'] == xaxis_column_name]['value'],
-            y=dff[dff['Category'] == yaxis_column_name]['value'],
-            z=dff[dff['Category'] == zaxis_column_name]['value'],
-            hover_name=dff[dff['Category'] == yaxis_column_name]['display_name'],
-            color = dff[dff['Category'] == yaxis_column_name]['hover']
-            )
-    
-    fig.update_scenes(xaxis_title=xaxis_column_name,
-                      yaxis_title=yaxis_column_name,
-                      zaxis_title=zaxis_column_name) 
-    
-    fig.update_traces(customdata=dff[dff['Category'] == yaxis_column_name]['display_name'], marker_size=5)
-
- 
-    fig.update_layout(margin={'l': 40, 'b': 40, 't': 10, 'r': 0}, hovermode='closest', showlegend=False)
-    fig.update_layout(showlegend = False)
-
-    return fig
  
  
 if __name__ == '__main__':
