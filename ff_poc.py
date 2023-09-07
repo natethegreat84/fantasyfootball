@@ -9,29 +9,27 @@ import dash
 from dash import Dash, html, dcc, dash_table, callback, Output, Input
 import dash_bootstrap_components as dbc
 
+# bring in nfl play data for the previous seasons
 pbp_rp = nfl.import_seasonal_data([2017,2018,2019,2020,2021,2022])
 
-# pbp_rp = pbp_rp[(pbp_rp['carries'] >= 100) | (pbp_rp['receptions'] >= 40)]
-
-pbp_rp.columns
-
-
+# filter down to use only needed stats
 player_stats = pbp_rp.filter(items=['player_id', 'season', 'games','carries', 'rushing_yards',
        'rushing_tds','receptions', 'targets', 'receiving_yards', 'receiving_tds', 'receiving_yards_after_catch',
        'fantasy_points', 'fantasy_points_ppr'])
 
+# grab player information to link position and display name to the season stats, then filter that data down
 player_index = nfl.import_players()
-# player_index.columns
 player_index = player_index.filter(items=['display_name', 'position', 'gsis_id'])
 
 player_index.rename(columns={'gsis_id':'player_id'}, inplace=True)
-# player_index
 
+# join the season stats data and the player info data
 player_stats = player_stats.merge(player_index, how='left', on='player_id')
 player_stats['yards_per_attempt'] = player_stats['rushing_yards'] / player_stats['carries']
 player_stats['fp_per_game'] = player_stats['fantasy_points'] / player_stats['games']
 player_stats['fp_ppr_per_game'] = player_stats['fantasy_points_ppr'] / player_stats['games']
 
+# filter out Quarterbacks
 player_stats = player_stats[player_stats['position'] != 'QB']
 
 player_stats = player_stats.filter(items=['display_name', 'position', 'season', 'games','carries', 'rushing_yards', 'rushing_tds', 'yards_per_attempt',
@@ -40,10 +38,11 @@ player_stats = player_stats.filter(items=['display_name', 'position', 'season', 
 
 player_stats = player_stats.sort_values(['display_name', 'season'])
 
-
+# delete the previous dataframes to keep memory down
 del player_index
 del pbp_rp
 
+# unpivot the data in order to render graph axis with selected categories
 dfr = player_stats.melt(id_vars=['season', 'display_name', 'position', 'games'],
                                  var_name='Category',
                                  value_vars=['carries', 'rushing_yards', 'rushing_tds', 'yards_per_attempt',
@@ -53,7 +52,8 @@ dfr = player_stats.melt(id_vars=['season', 'display_name', 'position', 'games'],
 app = Dash(__name__)
 server = app.server
 
- 
+# this give the layout of the page. 
+# there is a mashup of dash and HTML code.
 app.layout = dbc.Container([html.H1("Fantasy Football POC"), html.P("Proof of concept to visualize player stats dynamically"),
                     html.H2("Skill Players' Stats"),
                     html.Div([
@@ -119,7 +119,7 @@ app.layout = dbc.Container([html.H1("Fantasy Football POC"), html.P("Proof of co
           
  
 
-
+# callbacks are used to update the graphs and datatable, based on the user's selection
 @callback(
     Output('crossfilter-indicator-scatter', 'figure'),
     Input('crossfilter-xaxis-column', 'value'),
