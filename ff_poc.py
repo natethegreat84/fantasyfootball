@@ -125,16 +125,19 @@ app.layout = dbc.Container([html.H1("Fantasy Football POC"), html.P("Proof of co
     Input('crossfilter-xaxis-column', 'value'),
     Input('crossfilter-yaxis-column', 'value'),
     Input('crossfilter-zaxis-column', 'value'),
-    Input('crossfilter-year-slider', 'value'))
+    Input('crossfilter-year-slider', 'value'), 
+    Input('select-player-list','value'))
 def update_graph(xaxis_column_name, yaxis_column_name,zaxis_column_name,
                  year_value):
     
     dff = dfr[dfr['season'] == year_value] 
+    dff['hover'] = np.where(dff['display_name'] == hoverName, '1', '0') 
  
     fig = px.scatter_3d(x=dff[dff['Category'] == xaxis_column_name]['value'],
             y=dff[dff['Category'] == yaxis_column_name]['value'],
             z=dff[dff['Category'] == zaxis_column_name]['value'],
-            hover_name=dff[dff['Category'] == yaxis_column_name]['display_name']
+            hover_name=dff[dff['Category'] == yaxis_column_name]['display_name'],
+            color = dff[dff['Category'] == yaxis_column_name]['hover']
             )
     
     fig.update_scenes(xaxis_title=xaxis_column_name,
