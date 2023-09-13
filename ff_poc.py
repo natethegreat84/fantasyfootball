@@ -61,8 +61,9 @@ app.layout = dbc.Container([html.H1("Fantasy Football POC"), html.P("Proof of co
                             ['QB', 'RB', 'WR', 'TE'],
                             'RB',
                             id='crossfilter-player-position'
-                            )
+                            ), html.P("Player Position Category")
                         ]), 
+                    html.Br(), 
                     html.Div([
                         dcc.Dropdown(
                             dfr['Category'].unique(),
@@ -135,7 +136,7 @@ app.layout = dbc.Container([html.H1("Fantasy Football POC"), html.P("Proof of co
     Input('crossfilter-year-slider', 'value'),
     Input('crossfilter-player-position', 'value'))
 def update_graph(xaxis_column_name, yaxis_column_name,zaxis_column_name,
-                 year_value):
+                 year_value, player_position):
     
     dff = dfr[dfr['season'] == year_value] 
     dff = dff[dff['position']== player_position]
