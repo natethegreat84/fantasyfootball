@@ -144,7 +144,7 @@ def update_graph(xaxis_column_name, yaxis_column_name,zaxis_column_name,
     fig.update_traces(customdata=dff[dff['Category'] == yaxis_column_name]['display_name'], marker_size=5)
 
  
-    fig.update_layout(margin={'l': 40, 'b': 40, 't': 10, 'r': 0}, hovermode='closest', showlegend=False)
+    fig.update_layout(height = 675, margin={'l': 40, 'b': 40, 't': 10, 'r': 0}, hovermode='closest', showlegend=False)
     fig.update_layout(showlegend = False)
  
     return fig
