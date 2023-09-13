@@ -58,6 +58,13 @@ app.layout = dbc.Container([html.H1("Fantasy Football POC"), html.P("Proof of co
                     html.H2("Skill Players' Stats"),
                     html.Div([
                         dcc.Dropdown(
+                            ['QB', 'RB', 'WR', 'TE'],
+                            'RB',
+                            id='crossfilter-player-position'
+                            )
+                        ]), 
+                    html.Div([
+                        dcc.Dropdown(
                             dfr['Category'].unique(),
                             'rushing_tds',
                             id='crossfilter-xaxis-column'
@@ -125,12 +132,14 @@ app.layout = dbc.Container([html.H1("Fantasy Football POC"), html.P("Proof of co
     Input('crossfilter-xaxis-column', 'value'),
     Input('crossfilter-yaxis-column', 'value'),
     Input('crossfilter-zaxis-column', 'value'),
-    Input('crossfilter-year-slider', 'value'))
+    Input('crossfilter-year-slider', 'value'),
+    Input('crossfilter-player-position', 'value'))
 def update_graph(xaxis_column_name, yaxis_column_name,zaxis_column_name,
                  year_value):
     
     dff = dfr[dfr['season'] == year_value] 
- 
+    dff = dff[dff['position']== player_position]
+                        
     fig = px.scatter_3d(x=dff[dff['Category'] == xaxis_column_name]['value'],
             y=dff[dff['Category'] == yaxis_column_name]['value'],
             z=dff[dff['Category'] == zaxis_column_name]['value'],
