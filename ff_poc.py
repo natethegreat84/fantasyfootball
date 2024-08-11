@@ -10,7 +10,7 @@ from dash import Dash, html, dcc, dash_table, callback, Output, Input
 import dash_bootstrap_components as dbc
 
 # bring in nfl play data for the previous seasons
-pbp_rp = nfl.import_seasonal_data([2017,2018,2019,2020,2021,2022])
+pbp_rp = nfl.import_seasonal_data([2017,2018,2019,2020,2021,2022,2023])
 
 # filter down to use only needed stats
 player_stats = pbp_rp.filter(items=['player_id', 'season', 'games','carries', 'rushing_yards',
